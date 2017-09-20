@@ -1,0 +1,88 @@
+#teste estatistico
+#para valores de 1 ate 10
+'''
+Para ui sera necessario abrir o programa com algumas linhas e colunas vazias
+adicionar e remover linhas e colunas
+modificar nome das colunas
+realizar regressao linear com os valores plotados
+importar e salvar arquivos
+'''
+
+'''
+
+importar dados na tabela, avisando quais valores devem ser retirados (colorir de veremelho)
+realizar calculos estatisticos: mean,var,stddev com os valores corretos OK
+realizar teste de Cochran
+realizar regressao linear
+
+'''
+    
+def first_mean():
+    dados = range(10)
+    xi = 0
+    n = len(dados)
+    sum = 0
+    while xi < n:
+      sum = sum + dados[xi]
+      xi = xi+1
+    first_mean = float(sum/n)
+    return first_mean
+   
+def first_var(): 
+    dados = range(10)
+    xi = 0
+    n = len(dados)
+    first_sum_var = 0
+    while xi < n:
+      first_sum_var = first_sum_var + (dados[xi] - first_mean())**2
+      xi = xi+1
+    first_var = float(first_sum_var/n)
+    return first_var
+    
+def first_stddev():
+    first_stddev = float(first_var()**(1/2))
+    return first_stddev
+
+def tGrubbs():
+    dados = range(10)
+    xi = 0
+    n = len(dados)
+    Gtab = 2.036 # colocar arquivo para retirar da tab
+    dados_corretos = []
+    while xi < n:
+      Gcalc = (dados[xi] - first_mean())/(first_stddev())
+      xi = xi+1
+      if Gcalc < Gtab:        
+        dados_corretos = dados_corretos + str(dados[xi-1]).split(",")
+    return dados_corretos  
+
+#feito nova media e variancia para dados_corretos
+
+
+def mean():
+    dados = tGrubbs()
+    xi = 0
+    n = len(dados)
+    sum = 0
+    while xi < n:
+      sum = sum + int(dados[xi])
+      xi = xi+1
+    mean = float(sum/n)
+    return mean
+
+def var():
+    dados = tGrubbs()
+    xi = 0
+    n = len(dados)
+    sum_var = 0
+    while xi < n:
+      sum_var = sum_var + (int(dados[xi]) - mean())**2
+      xi = xi+1
+    var = float(sum_var/n)
+    return var
+
+def stddev():
+    stddev = float(var()**(1/2))
+    return stddev
+
+
