@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1036</width>
-    <height>618</height>
+    <height>710</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -46,80 +46,143 @@
             </item>
             <item>
              <layout class="QGridLayout" name="gridLayout_btns">
-              <item row="2" column="1">
-               <widget class="QPushButton" name="homocedastidade_btn">
-                <property name="text">
-                 <string>Homocedastidade</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QPushButton" name="remove_row_btn">
-                <property name="text">
-                 <string>Remove Row</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
+              <item row="4" column="0">
                <widget class="QCheckBox" name="grubbs_checkBox">
                 <property name="text">
                  <string>Teste de Grubbs</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QPushButton" name="linear_reg_btn">
+              <item row="3" column="1">
+               <widget class="QLabel" name="gl_tot_label">
                 <property name="text">
-                 <string>Linear regression</string>
+                 <string/>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QPushButton" name="add_column_btn">
+              <item row="2" column="1">
+               <widget class="QLabel" name="gl_res_label">
                 <property name="text">
-                 <string>Add Column</string>
+                 <string/>
                 </property>
                </widget>
               </item>
-              <item row="3" column="0">
-               <widget class="QPushButton" name="se_btn">
+              <item row="1" column="2">
+               <widget class="QLabel" name="sq_reg_label">
                 <property name="text">
-                 <string>Erro padrao da estimativa</string>
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="QLabel" name="sq_tot_label">
+                <property name="text">
+                 <string/>
                 </property>
                </widget>
               </item>
               <item row="2" column="0">
-               <widget class="QPushButton" name="grubbs_btn">
+               <widget class="QLabel" name="label_5">
                 <property name="text">
-                 <string>Teste Grubbs</string>
+                 <string>Residues</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string>Total</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QPushButton" name="homocedastidade_btn">
+                <property name="text">
+                 <string>Homocedastidade</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>Regression</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="0">
-               <widget class="QPushButton" name="import_table_btn">
+               <widget class="QLabel" name="label_3">
                 <property name="text">
-                 <string>import to table</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QPushButton" name="sse_btn">
-                <property name="text">
-                 <string>Soma dos quadrados dos residuos</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item row="0" column="2">
-               <widget class="QPushButton" name="remove_column_btn">
+               <widget class="QLabel" name="label_9">
                 <property name="text">
-                 <string>Remove Column</string>
+                 <string>Soma dos Quadrados</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLabel" name="sq_res_label">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_7">
+                <property name="text">
+                 <string>Graus de liberdade</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="3">
+               <widget class="QLabel" name="qm_tot_label">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QLabel" name="qm_reg_label">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QLabel" name="label_10">
+                <property name="text">
+                 <string>Quadrado medio</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QPushButton" name="add_row_btn">
+               <widget class="QLabel" name="gl_reg_label">
                 <property name="text">
-                 <string>Add Row</string>
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="2">
+               <widget class="QLabel" name="homocedast_label">
+                <property name="text">
+                 <string>TextLabel</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="3">
+               <widget class="QLabel" name="f_label">
+                <property name="text">
+                 <string>TextLabel</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="3">
+               <widget class="QLabel" name="qm_res_label">
+                <property name="text">
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -154,20 +217,7 @@
             </item>
             <item>
              <layout class="QGridLayout" name="gridLayout_info">
-              <item row="0" column="3">
-               <widget class="QLabel" name="equation_label">
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLineEdit" name="solution_lineEdit"/>
-              </item>
-              <item row="2" column="3">
+              <item row="3" column="3">
                <widget class="QLabel" name="R_label">
                 <property name="text">
                  <string/>
@@ -177,7 +227,10 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="0">
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="solution_lineEdit"/>
+              </item>
+              <item row="1" column="0">
                <widget class="QLabel" name="substance_label">
                 <property name="text">
                  <string>Susbtance:</string>
@@ -187,16 +240,26 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QLineEdit" name="substance_lineEdit"/>
-              </item>
-              <item row="2" column="0">
+              <item row="3" column="0">
                <widget class="QLabel" name="solution_label">
                 <property name="text">
                  <string>Solution:</string>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="substance_lineEdit"/>
+              </item>
+              <item row="1" column="3">
+               <widget class="QLabel" name="equation_label">
+                <property name="text">
+                 <string/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -300,7 +363,6 @@
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
-    <addaction name="actionImport_CSV"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -310,7 +372,17 @@
     </property>
     <addaction name="actionAbout_it"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionAdd_Column"/>
+    <addaction name="actionRemove_column"/>
+    <addaction name="actionAdd_row"/>
+    <addaction name="actionRemove_row"/>
+   </widget>
    <addaction name="menuFIle"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -347,6 +419,26 @@
   <action name="actionEditor">
    <property name="text">
     <string>Editor</string>
+   </property>
+  </action>
+  <action name="actionAdd_Column">
+   <property name="text">
+    <string>Add column</string>
+   </property>
+  </action>
+  <action name="actionRemove_column">
+   <property name="text">
+    <string>Remove column</string>
+   </property>
+  </action>
+  <action name="actionAdd_row">
+   <property name="text">
+    <string>Add row</string>
+   </property>
+  </action>
+  <action name="actionRemove_row">
+   <property name="text">
+    <string>Remove row</string>
    </property>
   </action>
  </widget>

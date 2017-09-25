@@ -52,27 +52,10 @@ class ExampleApp(QtGui.QMainWindow, tchubiloo.Ui_MainWindow):
         self.setupUi(self)               
               
     #-------------------BUTTONS------------------------------#          
-        
-        #import file button
-        self.import_table_btn.clicked.connect(self.import_file)
-        #add row button
-        self.add_row_btn.clicked.connect(self.analise_var) 
-        #add column button
-        self.add_column_btn.clicked.connect(self.addcolumn)      
-        #remove row button
-        self.remove_row_btn.clicked.connect(self.removerow)
-        #remove column button
-        self.remove_column_btn.clicked.connect(self.removecolumn)
 
-        
-        #linear regression button
-        self.linear_reg_btn.clicked.connect(self.min_quad_ord_n_pond)
         #homocedastidade button
         self.homocedastidade_btn.clicked.connect(self.homocedastidade)
-        #soma dos quadrados dos residuos button
-        self.sse_btn.clicked.connect(self.SSE)
-        #erro padrao da estimativa test button
-        self.se_btn.clicked.connect(self.SE)        
+      
         #----------------END OF BUTTONS----------------------------#
         
         #-----------------Check Box-------------------------------#
@@ -105,6 +88,11 @@ class ExampleApp(QtGui.QMainWindow, tchubiloo.Ui_MainWindow):
         self.actionOpen.triggered.connect(self.import_file)
         #Save menu
         self.actionSave.triggered.connect(self.save_file)
+        # Edit tab
+        self.actionAdd_Column.triggered.connect(self.addcolumn)
+        self.actionRemove_column.triggered.connect(self.removecolumn)
+        self.actionAdd_row.triggered.connect(self.addrow)
+        self.actionRemove_row.triggered.connect(self.removerow)
         #-------- END OF MENU------------#
         
         #---------------------CA Canvas----------------------------#
@@ -309,28 +297,56 @@ class ExampleApp(QtGui.QMainWindow, tchubiloo.Ui_MainWindow):
         
         #Sendo x concentracao e y absorvancia medida e ycal absorvancia da reta
         #Sendo ycal = m*x + b; equacao da reta
-        n=0
-        av_res = []
-        while n < len(x_list):
-            ycal = b + (m * (x_list[n]))
-            #av_res = y_list[n] - ycal
-            av_res = av_res+[y_list[n] - ycal]
-            n = n+1           
-        n = range(1,len(x_list)+1)
         
-        #-------------mean av res-----------------#
+        
+        #----------------subtraindo absorvancias da media------------------#
+        out_row = 0
+        out_column = 1
+        out_columns = (self.outlier_tableWidget.columnCount())-2        
+        out_rows = self.outlier_tableWidget.rowCount()           
+        out_mean_column = (self.outlier_tableWidget.columnCount())-2
+        absorvance_list =[]
+        abs_minus_med =[]
+        av_res_x =[]
+        
+        n = 0 #numero de valores de cada linha
+        while out_row < out_rows: #row e a linha atual, rows e o total de linhas 
+            while out_column < out_columns:#column e a coluna atual, columns e o total de colunas                
+                absorvance_item = self.outlier_tableWidget.item(out_row, out_column)
+                if absorvance_item is not None:                  
+                  absorvance_value = float(unicode(absorvance_item.text()).encode('utf8'))
+                  abs_minus_med = abs_minus_med + [(absorvance_value - y_list[out_row])]
+                  #print abs_minus_med
+                  #print len(abs_minus_med)
+                  absorvance_list = absorvance_list +[absorvance_value]
+                  n = n+1                
+                  out_column = out_column+1
+                  av_res_x = av_res_x + [out_row]
+                else:
+                  out_column = out_column+1
+            out_column = 1
+            n = 0            
+            out_row = out_row+1
+        #print abs_minus_med
+        #print av_res_x
+        #-------------------------------#
+
+        #-------------plotar pontos av res-----------------#
         ax2 = self.figure.add_axes([0.1, 0.01, 0.35, 0.2])
-        ax2.plot(n,av_res, linestyle='None', marker='.', color='r')        
+        ax2.plot(av_res_x,abs_minus_med, linestyle='None', marker='.', color='r')        
+        #---------plotar linha 0--------------#
         numero = 0
         av_y = []
-        while numero < len(x_list):
-            av_y = av_y + [0]
-            numero = numero+1      
-        ax2.plot(n,av_y, 'b')
+        while numero < len(av_res_x):
+            av_y = av_y + [0]            
+            numero = numero+1
+
+        ax2.plot(av_res_x,av_y, 'b')
         self.canvas = FigureCanvas(self.figure)     
         self.gridLayout_graph.addWidget(self.canvas, 2,0,1,2)
         self.navi_toolbar = NavigationToolbar(self.canvas, self)
         self.gridLayout_graph.addWidget(self.navi_toolbar, 1,0,1,2)
+        
 
 
     def grubbs_test(self): #ok e passa os dados para tabela de outliers
@@ -441,108 +457,148 @@ class ExampleApp(QtGui.QMainWindow, tchubiloo.Ui_MainWindow):
               soma_var = soma_var + float(row_std_dev)
               #print soma_var
             xi_row = xi_row+1
-        
+
         maior_var = max(list_std_dev)
         maior_var = (float(maior_var))**2
         
         Ccalc = maior_var / soma_var        
         if Ccalc > Ctab :
-          print "Nao e homocedastico"
-          
+          self.homocedast_label.setText("Nao e homocedastico")
         else:
-          print "E homocedastico"
+          self.homocedast_label.setText("Homocedastico")
           self.min_quad_ord_n_pond()
-    
-    def SSE(self):#faltando pegar valores outliers
-
-        
-        casas_decimais = 4 #numero de casas decimais
-        precision = '.'+str(casas_decimais)+'f'
-        xi_column = 1
-        xi_row = 0
-        rows = self.tableWidget.rowCount()
-        columns = (self.tableWidget.columnCount())-2        
-        soma_quad_res = 0
-        
-
-        if self.equation_label is not None:
-          doc = QtGui.QTextDocument()
-          doc.setHtml(self.equation_label.text())
-          eq_reta = str(doc.toPlainText())
-          eq_reta = eq_reta.split()
-          m = (eq_reta[2].replace('x',''))
-          b = eq_reta[4]
-          def is_integer(d):
-              return d == d.to_integral_value()
-                  
-          d_int = Decimal(3)
-          assert is_integer(d_int)
-          m = Decimal(m)
-          b = Decimal(b)
-          assert not is_integer(m)
-          assert not is_integer(b)
-          
-          while xi_row < rows:
-              while xi_column < columns:
-                  absorvance_item = self.tableWidget.item(xi_row, xi_column)
-                  concentration_item = self.tableWidget.item(xi_row, 0)
-                  if absorvance_item and concentration_item is not None:
-                    absorvance_value_medido = Decimal(unicode(absorvance_item.text()).encode('utf8'))# pegar valor de absorvancia medido
-                    assert not is_integer(absorvance_value_medido)
-                    concentration_value = Decimal(unicode(concentration_item.text()).encode('utf8'))#pegar valor de concentracao
-                    assert not is_integer(concentration_value)             
-                    
-                    
-                    absorvance_value_reta = (m*concentration_value) + b #eq da reta                   
-                    soma_quad_res = soma_quad_res + (absorvance_value_medido - absorvance_value_reta)**2                                                         
-                    xi_column = xi_column + 1
-              xi_row = xi_row + 1
-              xi_column = 1              
-        
-        print soma_quad_res
-
-
-    def SE(self):#faltando pegar valores outliers
-        
-        #Se = ((SOM (yi - Yi)**2)/n-2)**1/2 extrair o numerador de SSE
-        pass
-             
+          self.analise_var()
 
     def analise_var(self):
+        
+        
+        p = 2# numero de grupos!!!!!!!!!<<<<<<<<<<<<<???????????????
+        
+        
+        x_list = []
         n = self.outlier_tableWidget.rowCount()
         gl = n-1
-        
+        casas_decimais = 4 #numero de casas decimais
+        precision = '.'+str(casas_decimais)+'f'
         mean_list = []            
-        s_dev_list = []
+        concentration_list = []
         
         o_row = 0  
         o_rows = self.outlier_tableWidget.rowCount()           
         o_mean_column = (self.outlier_tableWidget.columnCount())-2
-        o_stddev_column = self.outlier_tableWidget.columnCount()-1
+        o_concentration_column = 0
         
         while o_row < o_rows: #row e a linha atual, rows e o total de linhas      
 
             mean_item = self.outlier_tableWidget.item(o_row, o_mean_column)
-            s_dev_item = self.outlier_tableWidget.item(o_row, o_stddev_column)
+            concentration_item = self.outlier_tableWidget.item(o_row, o_concentration_column)
             if mean_item is not None:                  
               mean_value = float(unicode(mean_item.text()).encode('utf8'))
               mean_list = mean_list+[mean_value]
-              #print mean_list        
-              
-            if s_dev_item is not None:          
-              s_dev_value = float(unicode(s_dev_item.text()).encode('utf8'))
-              s_dev_list = s_dev_list+[s_dev_value]
-              #print s_dev_list
-            
+            if concentration_item is not None:                  
+              concentration_value = float(unicode(concentration_item.text()).encode('utf8'))
+              concentration_list = concentration_list+[concentration_value]
             else:
               pass 
             o_row = o_row+1
             
-            
+        #print mean_list #lista de media das absrovancias
+        #print concentration_list #lista de concentracoes
+        eq_reta = (unicode(self.equation_label.text()).encode('utf8')).split()
+        #print eq_reta
+        b = eq_reta[4]
+        m = eq_reta[2].replace("x","")
+        #print b
+        #print m
+
+        o_row = 0
+        o_column = 1
+        o_columns = (self.outlier_tableWidget.columnCount())-2        
+        o_rows = self.outlier_tableWidget.rowCount()           
+        o_mean_column = (self.outlier_tableWidget.columnCount())-2
+        absorvance_list =[]
         
+        n = 0 #numero de valores de cada linha
+        while o_row < o_rows: #row e a linha atual, rows e o total de linhas 
+            while o_column < o_columns:#column e a coluna atual, columns e o total de colunas                
+                absorvance_item = self.outlier_tableWidget.item(o_row, o_column)
+                if absorvance_item is not None:                  
+                  absorvance_value = float(unicode(absorvance_item.text()).encode('utf8'))
+                  absorvance_list = absorvance_list +[absorvance_value]
+                  n = n+1                
+                  o_column = o_column+1
+                else:
+                  o_column = o_column+1
+            o_column = 1
+            n = 0            
+            o_row = o_row+1
+        #print absorvance_list
+        #print concentration_list
         
-            
+        # sendo y a absorvancia
+        y_barra = sum(absorvance_list)/len(absorvance_list) #media das absorvancias
         
+        sq_reg = 0
+        n = 0
+        while n < len(concentration_list):
+            y_chapeu = m*(int(concentration_list[n])) + b # calculando a absorvancia da reta com os valores de concentracao         
+            q_reg = (float(y_chapeu) - float(y_barra))**2
+            sq_reg = float(sq_reg + q_reg)
+            n = n+1
+            #print sq_reg
+        #print sq_reg
+        qm_reg = sq_reg/(p-1) #2 e o numero de parametros??? sq_reg/p-1
+        print qm_reg# quadrado medio da regressao
+        
+        sq_res = 0
+        #n_chapeu = len(concentration_list)
+        #n_points = (self.outlier_tableWidget.columnCount())-2
+        n = 0 #numero de valores de cada linha
+        o_row = 0
+        o_column = 1
+        o_columns = (self.outlier_tableWidget.columnCount())-2        
+        o_rows = self.outlier_tableWidget.rowCount()           
+        o_mean_column = (self.outlier_tableWidget.columnCount())-2
+        sq_res = 0
+        
+        while o_row < o_rows: #row e a linha atual, rows e o total de linhas 
+            while o_column < o_columns:#column e a coluna atual, columns e o total de colunas                
+                absorvance_item = self.outlier_tableWidget.item(o_row, o_column)
+                concentration_item = self.outlier_tableWidget.item(o_row, 0)
+                if absorvance_item and concentration_item is not None:                  
+                  absorvance_value = float(unicode(absorvance_item.text()).encode('utf8'))
+                  concentration_value = float(unicode(concentration_item.text()).encode('utf8'))
+                  y_chapeu = m*int(concentration_value) +b
+                  subtracao = (float(absorvance_value) - float(y_chapeu))**2
+                  sq_res = sq_res + subtracao
+                  o_column = o_column+1
+                  n = n+1
+                else:
+                  o_column = o_column+1
+            o_column = 1                
+            o_row = o_row+1
+        qm_res = sq_res/(len(absorvance_list)-p) #onde 2 e o valor de p???
+        
+        sq_tot = sq_res + sq_reg
+        qm_tot = qm_reg + qm_res
+        f = qm_reg/qm_res #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<faltando pegar o valor de f tabelado!!!!!!!!!
+        #n e o numero de pontos!!!!!!
+        #p e o numero de grupos!!!!!!!
+        
+        self.gl_reg_label.setText(str(p-1))
+        self.gl_res_label.setText(str(n-p)) 
+        self.gl_tot_label.setText(str(n-1)) 
+        
+        self.sq_reg_label.setText(str(sq_reg))
+        self.sq_res_label.setText(str(sq_res))
+        self.sq_tot_label.setText(str(sq_tot))
+        
+        self.qm_reg_label.setText(str(qm_reg))
+        self.qm_res_label.setText(str(qm_res))
+        self.qm_tot_label.setText(str(qm_tot))
+        
+        self.f_label.setText("F: "+str(f))
+                
     #------------------------END OF ANALISES ESTATISTICAS--------------------#    
         
         
